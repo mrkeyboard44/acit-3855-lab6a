@@ -1,0 +1,7 @@
+version: 1
+eventExerciseData:
+  url: http://localhost:8090/exerciseData
+eventExerciseParameters:
+  url: http://localhost:8090/exerciseParameters
+eventExerciseSummary:
+  url: http://localhost:8090/exerciseSummary
