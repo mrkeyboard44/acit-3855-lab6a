@@ -1,0 +1,7 @@
+connexion
+sqlalchemy
+swagger-ui-bundle
+flask
+jinja2
+MarkupSafe==2.0.1
+pymysql
