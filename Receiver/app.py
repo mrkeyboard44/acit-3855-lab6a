@@ -9,12 +9,25 @@ import logging
 import logging.config
 import requests
 import datetime
+import KafkaClient from pykafka
 
 MAX_EVENTS = 10
 EVENT_FILE = 'events.json'
 
+with open('app_conf.yaml', 'r') as f:
+    app_config = yaml.safe_load(f.read())
+
+client = KafkaClient(hosts=f'{app_config.hostname}:{app_config.port}')
+topic = client.topics[str.encode(app_config.topic)]
+producer = topic.get_sync_producer()
+
+
+
+
 def report_exercise_data(body):
     date_created = str(datetime.datetime.now())
+
+    
     trace_time = str(datetime.datetime.now())
     trace_id = str(uuid.uuid1())
    
@@ -27,9 +40,15 @@ def report_exercise_data(body):
             'trace_id': trace_id}
 
     #write_to_json(payload)
-    res = requests.post('http://localhost:8090/exerciseData', json=payload)
+    # res = requests.post('http://localhost:8090/exerciseData', json=payload)
 
-    return [res.status_code, payload['trace_id']]
+    msg = { "type": "exercise_data",
+        "datetime" : datetime.datetime.now().strftime("%Y-%m-%dT%H:%M:%S"),
+        "payload": payload }
+    msg_str = json.dumps(msg)
+    producer.produce(msg_str.encode('utf-8'))
+
+    return NoContent, 201
 
 
 def report_user_parameters(body):
@@ -51,11 +70,13 @@ def report_user_parameters(body):
     
     # write_to_json(payload)
 
-    res = requests.post('http://localhost:8090/userParameters', json=payload)
+    msg = { "type": "user_parameters",
+        "datetime" : datetime.datetime.now().strftime("%Y-%m-%dT%H:%M:%S"),
+        "payload": payload }
+    msg_str = json.dumps(msg)
+    producer.produce(msg_str.encode('utf-8'))
 
-    logger.info('test')    
-
-    return [res.status_code, payload['trace_id']]
+    return NoContent, 201
 
 
 def request_check_success(vars, body):

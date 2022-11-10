@@ -7,7 +7,10 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from exercise_data import ExerciseData
 from user_parameters import UserParameters
-
+import json
+import KafkaClient from pykafka
+import OffsetType from pykafka.common
+import Thread from threading
 
 from base import Base
 import logging
@@ -124,7 +127,36 @@ def get_user_parameters(timestamp):
 
 
 
-
+def process_messages():
+    """ Process event messages """
+    hostname = "%s:%d" % (app_config["events"]["hostname"],
+    app_config["events"]["port"])
+    
+    client = KafkaClient(hosts=hostname)
+    topic = client.topics[str.encode(app_config["events"]["topic"])]
+    
+    # Create a consume on a consumer group, that only reads new messages
+    # (uncommitted messages) when the service re-starts (i.e., it doesn't
+    # read all the old messages from the history in the message queue).
+    consumer = topic.get_simple_consumer(consumer_group=b'event_group',
+                                        reset_offset_on_start=False,
+                                        auto_offset_reset=OffsetType.LATEST)
+    
+    # This is blocking - it will wait for a new message
+    for msg in consumer:
+        msg_str = msg.value.decode('utf-8')
+        msg = json.loads(msg_str)
+        logger.info("Message: %s" % msg)
+        
+        payload = msg["payload"]
+        
+        if msg["type"] == "event1": # Change this to your event type
+            # Store the event1 (i.e., the payload) to the DB
+        elif msg["type"] == "event2": # Change this to your event type
+            # Store the event2 (i.e., the payload) to the DB
+        
+        # Commit the new message as being read
+        consumer.commit_offsets()
     
 
 # with open('app_conf.yml', 'r') as f:
@@ -142,3 +174,6 @@ app.add_api("openapi.yml", strict_validation=True, validate_responses=True)
 
 if __name__ == "__main__":
     app.run(port=8090)
+    t1 = Thread(target=process_messages)
+    t1.setDaemon(True)
+    t1.start()

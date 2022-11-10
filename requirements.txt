@@ -1,0 +1,5 @@
+pykafka
+connexion
+sqlalchemy
+requests
+logging
