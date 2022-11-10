@@ -8,9 +8,9 @@ from sqlalchemy.orm import sessionmaker
 from exercise_data import ExerciseData
 from user_parameters import UserParameters
 import json
-import KafkaClient from pykafka
-import OffsetType from pykafka.common
-import Thread from threading
+from pykafka import KafkaClient 
+from pykafka.common import OffsetType 
+from threading import Thread 
 
 from base import Base
 import logging
