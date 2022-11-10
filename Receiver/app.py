@@ -17,7 +17,7 @@ EVENT_FILE = 'events.json'
 with open('app_conf.yaml', 'r') as f:
     app_config = yaml.safe_load(f.read())
 
-client = KafkaClient(hosts=f'{app_config.hostname}:{app_config.port}')
+client = KafkaClient(hosts=f'{app_config.hostname}:{app_config['hostname']['port']}')
 topic = client.topics[str.encode(app_config.topic)]
 producer = topic.get_sync_producer()
 
