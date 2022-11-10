@@ -26,6 +26,7 @@ with open('app_conf.yaml', 'r') as f:
     DB_PORT = app_config['datastore']['port']
     DB_NAME = app_config['datastore']['db']
 
+
 DB_ENGINE = create_engine(f'mysql+pymysql://{DB_USER}:{DB_PW}@{DB_HNAME}:{DB_PORT}/{DB_NAME}', pool_pre_ping=True)
 
 # DB_ENGINE = create_engine("sqlite:///readings.sqlite")
@@ -168,6 +169,8 @@ with open('log_conf.yml', 'r') as f:
     logging.config.dictConfig(log_config)
 
 logger = logging.getLogger('basicLogger')
+
+logger.info(f"Connecting to DB. Hostname:{DB_HNAME}, Port:{DB_PORT}")
 
 app = connexion.FlaskApp(__name__, specification_dir='')
 app.add_api("openapi.yml", strict_validation=True, validate_responses=True)

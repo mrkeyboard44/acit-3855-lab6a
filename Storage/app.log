@@ -1293,3 +1293,5 @@
 2022-10-31 00:23:22,993 - basicLogger - DEBUG - Stored event exerciseData request with a trace id of e706f830-58ec-11ed-be91-97742393551a
 2022-10-31 00:23:27,687 - basicLogger - INFO - Query for Exercise Data 2022-10-31 00:23:22.718682 returns 2 results
 2022-10-31 00:23:27,693 - basicLogger - INFO - Query for User Parameters 2022-10-31 00:23:22.718682 returns 0 results
+2022-11-01 07:31:38,880 - basicLogger - INFO - Connecting to DB. Hostname:acit-3855-matt-kafka.westus3.cloudapp.azure.com, Port:3306
+2022-11-01 07:31:38,917 - basicLogger - INFO - Connecting to DB. Hostname:acit-3855-matt-kafka.westus3.cloudapp.azure.com, Port:3306
